@@ -1,0 +1,111 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+<style>
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid lightblue;
+  border-radius: 5px;
+}
+</style>
+
+<div class="row">
+    <div class="col-sm-3 p-2">
+        <div class="card shadow bg-dark">
+            <div class="card-body">
+                <h4 class="text-light">Total Users</h4>
+                <h5 style="color : #F1948A">{{user.count}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/manage-user/" class="text-warning">View Details >></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 p-2">
+        <div class="card shadow bg-dark">
+            <div class="card-body">
+                <h4 class="text-light">Total Products</h4>
+                <h5 style="color : #F1948A">{{product.count}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/view-product/" class="text-warning">View Details >></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3 p-2">
+        <div class="card shadow bg-dark">
+            <div class="card-body">
+                <h4 class="text-light">Total Order</h4>
+                <h5 style="color : #F1948A"> {{order.count}}</h5>
+            </div>
+            <div class="card-footer">
+                <a href="/manage-order/?action=0" class="text-warning">View Details >></a>
+            </div>
+        </div>
+    </div>  
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow bg-dark">
+            <div class="card-body">
+                <h4 class="text-light">Orders/DAYS</h4>
+                <canvas id="ordersChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('ordersChart').getContext('2d');
+        var ordersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Labels for the x-axis
+                datasets: [{
+                    label: 'N° ORDERS',
+                    data: [], // Data for the y-axis
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 20,
+                        ticks: {
+                            stepSize: 2 // Step size for y-axis
+                        }
+                    }
+                }
+            }
+        });
+
+        // Fetch data from the server
+        fetch('/api/orders/')
+            .then(response => response.json())
+            .then(data => {
+                console.log('API data:', data);
+                ordersChart.data.labels = data.labels;
+                ordersChart.data.datasets[0].data = data.data;
+                ordersChart.update();
+            });
+    });
+</script>
+{% endblock %}

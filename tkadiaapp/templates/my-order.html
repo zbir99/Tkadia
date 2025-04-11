@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>My Order</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+{% include 'navbar.html' %}
+<hr class="mt-0">
+<div class="card shadow m-5" id="myorder">
+    <div class="card-body">
+        <div class="container-fluid">
+            <h3 style="font-family:roman">My Order</h3>
+            <table class="table table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>BookingID</th>
+                    <th>TotalPrice</th>
+                    <th>Status</th>
+                    <th>CreationDate</th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in order %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.id}}</td>
+                    <td>{{i.total}}</td>
+                    <td><a href="" class="btn btn-primary" title="Track Status">{{i.get_status_display}}</a></td>
+                    <td>{{i.created}}</td>
+                   
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
